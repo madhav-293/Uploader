@@ -1,7 +1,6 @@
 package com.CSV.CsvReader.controller;
 
 
-import com.CSV.CsvReader.dto.FileDetail;
 import com.CSV.CsvReader.model.Csv;
 import com.CSV.CsvReader.service.CsvService;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -14,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -34,11 +32,13 @@ public class CsvController {
     }
 
     @GetMapping("/getAll")
-    public List<Csv> getCsv(){
-        return csvService.getAll();
+    public List<Csv> getCsv(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection) {
+        return csvService.getAll(page, size, sortBy, sortDirection);
     }
-
-
     @PostMapping("/postXML")
     public List<Csv> uploadXML(@RequestParam("file") MultipartFile file) {
 

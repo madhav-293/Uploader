@@ -10,6 +10,10 @@ import com.opencsv.exceptions.CsvException;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -55,8 +59,12 @@ public class CsvService {
     }
 
 
-    public List<Csv> getAll() {
-        return csvRepository.findAll();
+
+    public List<Csv> getAll(int page, int size, String sortBy, String sortDirection) {
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Csv> resultPage = csvRepository.findAll(pageable);
+        return resultPage.getContent();
     }
 
     public List<Csv> uploadXMl(MultipartFile file) {
